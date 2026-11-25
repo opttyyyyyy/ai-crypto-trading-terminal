@@ -1,0 +1,15 @@
+{
+  "icon": "icon.png",
+  "title": "BOTTY — AI Crypto Trading Terminal",
+  "description": "A local AI-powered crypto trading terminal with live or paper trading on Binance.",
+  "links": [{
+    "title": "Requirements",
+    "links": [{
+      "title": "Ollama (local AI)",
+      "value": "https://ollama.com/download"
+    }, {
+      "title": "Binance Public Data",
+      "value": "https://binance-docs.github.io/apidocs/spot/en/"
+    }]
+  }]
+}

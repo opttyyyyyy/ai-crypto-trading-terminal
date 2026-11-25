@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BOTTY — AI Crypto Trading Terminal</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">B</span>
+      <div>
+        <div class="brand-title">BOTTY</div>
+        <div class="brand-sub">AI CRYPTO TRADING TERMINAL</div>
+      </div>
+    </div>
+    <div class="status-strip">
+      <div class="chip" id="status-mode">MODE —</div>
+      <div class="chip" id="status-engine">ENGINE —</div>
+      <div class="chip" id="status-ai">AI —</div>
+      <div class="chip" id="status-exchange">EXCHANGE —</div>
+    </div>
+    <button class="btn danger" id="btn-emergency">EMERGENCY STOP</button>
+  </header>
+
+  <div class="layout">
+    <aside class="panel markets-panel">
+      <div class="panel-head"><span>MARKETS</span><span class="muted">LIVE</span></div>
+      <div id="markets-list" class="markets-list"></div>
+      <div class="panel-foot muted">Binance public market data</div>
+    </aside>
+
+    <main class="main">
+      <section class="panel chart-panel">
+        <div class="chart-head">
+          <div>
+            <div class="chart-title" id="chart-title">BTC/USDT</div>
+            <div class="chart-price" id="chart-price">—</div>
+            <div class="chart-change" id="chart-change">—</div>
+          </div>
+          <div class="timeframes" id="tf-buttons">
+            <button data-tf="15m">15m</button>
+            <button data-tf="1h" class="active">1h</button>
+            <button data-tf="4h">4h</button>
+            <button data-tf="1d">1d</button>
+          </div>
+        </div>
+        <canvas id="chart"></canvas>
+      </section>
+
+      <section class="panel trade-panel">
+        <div class="panel-head"><span>ORDER ENTRY</span><span class="muted" id="order-price">—</span></div>
+        <div class="trade-grid">
+          <label>Symbol<select id="order-symbol"></select></label>
+          <label>Amount (USDT)<input id="order-amount" type="number" value="10" min="1" step="1"></label>
+          <div class="quick">
+            <button data-amt="10">10</button><button data-amt="25">25</button>
+            <button data-amt="50">50</button><button data-amt="100">100</button>
+          </div>
+          <div class="trade-actions">
+            <button class="btn buy" id="btn-buy">BUY / LONG</button>
+            <button class="btn sell" id="btn-sell">SELL / CLOSE</button>
+            <button class="btn ghost" id="btn-analyze">AI ANALYZE</button>
+          </div>
+        </div>
+        <div class="engine-row">
+          <label class="switch"><input type="checkbox" id="auto-toggle"><span></span> AUTO TRADE</label>
+          <button class="btn ghost small" id="btn-engine-start">START ENGINE</button>
+          <button class="btn ghost small" id="btn-engine-stop">STOP ENGINE</button>
+          <button class="btn ghost small" id="btn-engine-cycle">RUN ONCE</button>
+        </div>
+      </section>
+
+      <section class="panel data-panel">
+        <div class="tabs">
+          <button data-tab="orders" class="active">POSITIONS</button>
+          <button data-tab="trades">TRADE HISTORY</button>
+          <button data-tab="decisions">AI DECISIONS</button>
+          <button data-tab="logs">EVENT LOG</button>
+        </div>
+        <div class="tab-body" id="tab-body"></div>
+      </section>
+    </main>
+
+    <aside class="panel side-panel">
+      <section class="side-section">
+        <div class="panel-head"><span>ACCOUNT</span></div>
+        <div class="kv"><span>Equity</span><b id="ac-equity">—</b></div>
+        <div class="kv"><span>Cash</span><b id="ac-cash">—</b></div>
+        <div class="kv"><span>Realized PnL</span><b id="ac-realized">—</b></div>
+        <div class="kv"><span>Unrealized PnL</span><b id="ac-unrealized">—</b></div>
+        <div class="kv"><span>Daily PnL</span><b id="ac-daily">—</b></div>
+        <div class="kv"><span>Exchange balance</span><b id="ac-balance">—</b></div>
+      </section>
+
+      <section class="side-section">
+        <div class="panel-head"><span>LATEST AI SIGNAL</span></div>
+        <div class="ai-card">
+          <div class="ai-action" id="ai-action">—</div>
+          <div class="ai-meta"><span id="ai-symbol">—</span><span id="ai-time">—</span></div>
+          <div class="confidence"><div class="confidence-bar" id="ai-confidence-bar"></div></div>
+          <div class="ai-confidence" id="ai-confidence">Confidence —</div>
+          <div class="ai-reason" id="ai-reason">Run AI Analyze or start the engine to generate a signal.</div>
+        </div>
+      </section>
+
+      <section class="side-section settings-section">
+        <div class="panel-head"><span>SETTINGS</span></div>
+        <div class="settings-grid">
+          <label>Exchange<select id="set-exchange">
+            <option value="binanceus">Binance.US</option>
+            <option value="binance">Binance Global</option>
+            <option value="kraken">Kraken</option>
+            <option value="coinbase">Coinbase</option>
+          </select></label>
+          <label>Trading mode<select id="set-mode">
+            <option value="live">LIVE</option>
+            <option value="paper">PAPER</option>
+          </select></label>
+          <label>API key<input id="set-api-key" type="password" autocomplete="off" placeholder="leave blank to keep"></label>
+          <label>API secret<input id="set-api-secret" type="password" autocomplete="off" placeholder="leave blank to keep"></label>
+          <label>AI model<select id="set-model"></select></label>
+          <label>Symbols (comma)<input id="set-symbols" value="BTC/USDT, ETH/USDT"></label>
+          <label>Cycle seconds<input id="set-interval" type="number" value="60" min="10"></label>
+          <label>Max order (USDT)<input id="set-max-order" type="number" value="50" min="1"></label>
+          <label>Daily loss limit<input id="set-max-loss" type="number" value="100" min="1"></label>
+          <label>Min confidence<input id="set-min-confidence" type="number" value="0.6" min="0" max="1" step="0.05"></label>
+        </div>
+        <div class="settings-actions">
+          <button class="btn ghost small" id="btn-save-settings">SAVE SETTINGS</button>
+          <button class="btn ghost small" id="btn-reset-paper">RESET PAPER</button>
+        </div>
+        <div class="risk-note">Live trading uses real funds. Set API keys with trading permission only, restrict withdrawals, and start with small limits.</div>
+      </section>
+    </aside>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
